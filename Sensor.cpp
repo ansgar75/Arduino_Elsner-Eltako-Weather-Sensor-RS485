@@ -1,4 +1,4 @@
-#include "Arduino_Eltako-Multisensor-MS.h"
+#include "Arduino_Elsner-Eltako-Weather-Sensor-RS485.h"
 
 #include <SoftwareSerial.h>
 

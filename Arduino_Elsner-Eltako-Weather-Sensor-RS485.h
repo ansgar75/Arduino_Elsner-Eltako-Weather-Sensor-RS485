@@ -1,5 +1,5 @@
-#ifndef Arduino_Eltako_Multisensor_MS_h
-#define Arduino_Eltako_Multisensor_MS_h
+#ifndef Arduino_Elsner_Eltako_Weather_Sensor_RS485_h
+#define Arduino_Elsner_Eltako_Weather_Sensor_RS485_h
 
 #include <Arduino.h>
 
@@ -27,4 +27,4 @@ void loop_sensor();
 void loop_webserver();
 
 
-#endif  // Arduino_Eltako_Multisensor_MS_h
+#endif  // Arduino_Elsner_Eltako_Weather_Sensor_RS485_h
