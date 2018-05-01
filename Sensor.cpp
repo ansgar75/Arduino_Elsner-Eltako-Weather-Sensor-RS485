@@ -44,36 +44,37 @@ void loop_sensor() {
         int checkSumSender = sensorMessage.substring(35, 39).toInt();
         if (sensorMessageChecksum == checkSumSender) {
 
+          Serial.print(F("Received valid sensor message: "));
           Serial.println(sensorMessage);
 
-          sensor_data.timestamp = millis();
-          sensor_data.at = sensorMessage.substring(1, 6).toFloat();
-          sensor_data.sos = sensorMessage.substring(6, 8).toInt();
-          sensor_data.sow = sensorMessage.substring(8, 10).toInt();
-          sensor_data.soo = sensorMessage.substring(10, 12).toInt();
-          sensor_data.daemmerung = sensorMessage[12] == 'J';
-          sensor_data.tageslicht = sensorMessage.substring(13, 16).toInt();
-          sensor_data.wind = sensorMessage.substring(16, 20).toFloat();
-          sensor_data.regen = sensorMessage[20] == 'J';
+          sensor_data.timestamp_millis = millis();
+          sensor_data.temperature_c = sensorMessage.substring(1, 6).toFloat();
+          sensor_data.sun_south_klx = sensorMessage.substring(6, 8).toInt();
+          sensor_data.sun_west_klx = sensorMessage.substring(8, 10).toInt();
+          sensor_data.sun_east_klx = sensorMessage.substring(10, 12).toInt();
+          sensor_data.is_twilight = sensorMessage[12] == 'J';
+          sensor_data.daylight_lx = sensorMessage.substring(13, 16).toInt();
+          sensor_data.wind_speed_ms = sensorMessage.substring(16, 20).toFloat();
+          sensor_data.is_raining = sensorMessage[20] == 'J';
 
-          Serial.print(F("Alter: "));
-          Serial.print(millis() - sensor_data.timestamp);
-          Serial.print(F(", Temp: "));
-          Serial.print(sensor_data.at);
-          Serial.print(F(", Sonne Sued: "));
-          Serial.print(sensor_data.sos);
-          Serial.print(F(", Sonne West: "));
-          Serial.print(sensor_data.sow);
-          Serial.print(F(", Sonne Ost: "));
-          Serial.print(sensor_data.soo);
-          Serial.print(F(", Daemmerung: "));
-          Serial.print(sensor_data.daemmerung);
-          Serial.print(F(", Tageslicht: "));
-          Serial.print(sensor_data.tageslicht);
-          Serial.print(F(", Wind: "));
-          Serial.print(sensor_data.wind);
-          Serial.print(F(", Regen: "));
-          Serial.print(sensor_data.regen);
+          Serial.print(F("readingAgeMs: "));
+          Serial.print(millis() - sensor_data.timestamp_millis);
+          Serial.print(F(", temperatureC: "));
+          Serial.print(sensor_data.temperature_c);
+          Serial.print(F(", sunSouthKlx: "));
+          Serial.print(sensor_data.sun_south_klx);
+          Serial.print(F(", sunWestKlx: "));
+          Serial.print(sensor_data.sun_west_klx);
+          Serial.print(F(", sunEastKlx: "));
+          Serial.print(sensor_data.sun_east_klx);
+          Serial.print(F(", isTwilight: "));
+          Serial.print(sensor_data.is_twilight);
+          Serial.print(F(", daylightLx: "));
+          Serial.print(sensor_data.daylight_lx);
+          Serial.print(F(", windSpeedMs: "));
+          Serial.print(sensor_data.wind_speed_ms);
+          Serial.print(F(", isRaining: "));
+          Serial.print(sensor_data.is_raining);
           Serial.println();
 
         } else {
