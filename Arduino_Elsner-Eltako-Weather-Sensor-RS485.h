@@ -13,7 +13,7 @@ typedef struct
   int sun_west_klx;
   bool is_dark;
   int daylight_lx;
-  float wind_speed_ms;
+  int wind_speed_tenth_ms;
   bool is_raining;
 } SensorData;
 

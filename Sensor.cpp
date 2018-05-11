@@ -54,7 +54,7 @@ void loop_sensor() {
           sensor_data.sun_east_klx = sensorMessage.substring(10, 12).toInt();
           sensor_data.is_dark = sensorMessage[12] == 'J';
           sensor_data.daylight_lx = sensorMessage.substring(13, 16).toInt();
-          sensor_data.wind_speed_ms = sensorMessage.substring(16, 20).toFloat();
+          sensor_data.wind_speed_tenth_ms = sensorMessage.substring(16, 18).toInt() * 10 + sensorMessage.substring(19, 20).toInt();
           sensor_data.is_raining = sensorMessage[20] == 'J';
 
           Serial.print(F("readingAgeMs: "));
@@ -71,8 +71,8 @@ void loop_sensor() {
           Serial.print(sensor_data.is_dark);
           Serial.print(F(", daylightLx: "));
           Serial.print(sensor_data.daylight_lx);
-          Serial.print(F(", windSpeedMs: "));
-          Serial.print(sensor_data.wind_speed_ms);
+          Serial.print(F(", windSpeedTenthMs: "));
+          Serial.print(sensor_data.wind_speed_tenth_ms);
           Serial.print(F(", isRaining: "));
           Serial.print(sensor_data.is_raining);
           Serial.println();
