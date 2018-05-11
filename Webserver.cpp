@@ -51,14 +51,14 @@ void loop_webserver()
           client.print(F("\"temperatureC\": "));
           client.print(sensor_data.temperature_c);
           client.println(",");
+          client.print(F("\"sunEastKlx\": "));
+          client.print(sensor_data.sun_east_klx);
+          client.println(",");
           client.print(F("\"sunSouthKlx\": "));
           client.print(sensor_data.sun_south_klx);
           client.println(",");
           client.print(F("\"sunWestKlx\": "));
           client.print(sensor_data.sun_west_klx);
-          client.println(",");
-          client.print(F("\"sunEastKlx\": "));
-          client.print(sensor_data.sun_east_klx);
           client.println(",");
           client.print(F("\"isTwilight\": "));
           client.print(sensor_data.is_twilight);

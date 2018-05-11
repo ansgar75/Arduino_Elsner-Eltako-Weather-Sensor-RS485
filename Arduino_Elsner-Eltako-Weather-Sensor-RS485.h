@@ -8,9 +8,9 @@ typedef struct
 {
   long timestamp_millis;
   float temperature_c;
+  int sun_east_klx;
   int sun_south_klx;
   int sun_west_klx;
-  int sun_east_klx;
   bool is_twilight;
   int daylight_lx;
   float wind_speed_ms;
