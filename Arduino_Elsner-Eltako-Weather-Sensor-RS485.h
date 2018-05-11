@@ -7,7 +7,7 @@
 typedef struct
 {
   long timestamp_millis;
-  float temperature_c;
+  int temperature_tenth_c;
   int sun_east_klx;
   int sun_south_klx;
   int sun_west_klx;

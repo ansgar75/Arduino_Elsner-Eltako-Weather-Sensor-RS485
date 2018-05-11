@@ -49,7 +49,7 @@ void loop_webserver()
           client.print(millis() - sensor_data.timestamp_millis);
           client.println(",");
           client.print(F("\"temperatureC\": "));
-          client.print(sensor_data.temperature_c);
+          client.print(sensor_data.temperature_tenth_c / 10); client.print("."); client.print(sensor_data.temperature_tenth_c % 10);
           client.println(",");
           client.print(F("\"sunEastKlx\": "));
           client.print(sensor_data.sun_east_klx);

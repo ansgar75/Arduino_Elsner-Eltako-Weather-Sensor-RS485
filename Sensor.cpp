@@ -48,7 +48,7 @@ void loop_sensor() {
           Serial.println(sensorMessage);
 
           sensor_data.timestamp_millis = millis();
-          sensor_data.temperature_c = sensorMessage.substring(1, 6).toFloat();
+          sensor_data.temperature_tenth_c = sensorMessage.substring(1, 4).toInt() * 10 + sensorMessage.substring(5, 6).toInt();
           sensor_data.sun_south_klx = sensorMessage.substring(6, 8).toInt();
           sensor_data.sun_west_klx = sensorMessage.substring(8, 10).toInt();
           sensor_data.sun_east_klx = sensorMessage.substring(10, 12).toInt();
@@ -59,8 +59,8 @@ void loop_sensor() {
 
           Serial.print(F("readingAgeMs: "));
           Serial.print(millis() - sensor_data.timestamp_millis);
-          Serial.print(F(", temperatureC: "));
-          Serial.print(sensor_data.temperature_c);
+          Serial.print(F(", temperatureTenthC: "));
+          Serial.print(sensor_data.temperature_tenth_c);
           Serial.print(F(", sunSouthKlx: "));
           Serial.print(sensor_data.sun_south_klx);
           Serial.print(F(", sunWestKlx: "));
