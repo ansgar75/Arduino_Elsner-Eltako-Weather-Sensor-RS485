@@ -60,11 +60,11 @@ void loop_webserver()
           client.print(F("\"sunWestKlx\": "));
           client.print(sensor_data.sun_west_klx);
           client.println(",");
-          client.print(F("\"isTwilight\": "));
-          client.print(sensor_data.is_twilight);
-          client.println(",");
           client.print(F("\"daylightLx\": "));
           client.print(sensor_data.daylight_lx);
+          client.println(",");
+          client.print(F("\"isDark\": "));
+          client.print(sensor_data.is_dark);
           client.println(",");
           client.print(F("\"windSpeedMs\": "));
           client.print(sensor_data.wind_speed_ms);

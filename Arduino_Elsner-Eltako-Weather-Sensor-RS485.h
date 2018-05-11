@@ -11,7 +11,7 @@ typedef struct
   int sun_east_klx;
   int sun_south_klx;
   int sun_west_klx;
-  bool is_twilight;
+  bool is_dark;
   int daylight_lx;
   float wind_speed_ms;
   bool is_raining;
