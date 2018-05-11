@@ -9,6 +9,7 @@ String sensorMessage = "";
 int sensorMessageChecksum = 0;
 
 SensorData sensor_data;
+WindSpeedBuffer wind_speed_history_buffer;
 
 
 void setup_sensor() {
@@ -57,6 +58,19 @@ void loop_sensor() {
           sensor_data.wind_speed_tenth_ms = sensorMessage.substring(16, 18).toInt() * 10 + sensorMessage.substring(19, 20).toInt();
           sensor_data.is_raining = sensorMessage[20] == 'J';
 
+          wind_speed_history_buffer.value[wind_speed_history_buffer.position] = sensor_data.wind_speed_tenth_ms;
+          wind_speed_history_buffer.position++;
+          if (wind_speed_history_buffer.position >= WIND_SPEED_BUFFER_SIZE) {
+            wind_speed_history_buffer.position = 0;
+          }
+
+          sensor_data.wind_speed_gusts_tenth_ms = 0;
+          for (int i = 0; i < WIND_SPEED_BUFFER_SIZE; i++) {
+            if (wind_speed_history_buffer.value[i] > sensor_data.wind_speed_gusts_tenth_ms) {
+              sensor_data.wind_speed_gusts_tenth_ms = wind_speed_history_buffer.value[i];
+            }
+          }
+
           Serial.print(F("readingAgeMs: "));
           Serial.print(millis() - sensor_data.timestamp_millis);
           Serial.print(F(", temperatureTenthC: "));
@@ -73,6 +87,8 @@ void loop_sensor() {
           Serial.print(sensor_data.daylight_lx);
           Serial.print(F(", windSpeedTenthMs: "));
           Serial.print(sensor_data.wind_speed_tenth_ms);
+          Serial.print(F(", windSpeedGustsTenthMs: "));
+          Serial.print(sensor_data.wind_speed_gusts_tenth_ms);
           Serial.print(F(", isRaining: "));
           Serial.print(sensor_data.is_raining);
           Serial.println();

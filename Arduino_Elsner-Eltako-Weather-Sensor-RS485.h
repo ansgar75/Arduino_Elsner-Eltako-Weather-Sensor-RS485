@@ -14,8 +14,16 @@ typedef struct
   bool is_dark;
   int daylight_lx;
   int wind_speed_tenth_ms;
+  int wind_speed_gusts_tenth_ms;
   bool is_raining;
 } SensorData;
+
+#define WIND_SPEED_BUFFER_SIZE 60
+typedef struct
+{
+  int value[WIND_SPEED_BUFFER_SIZE];
+  int position;
+} WindSpeedBuffer;
 
 extern SensorData sensor_data;
 

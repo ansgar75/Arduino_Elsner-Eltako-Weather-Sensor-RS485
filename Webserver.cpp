@@ -69,6 +69,9 @@ void loop_webserver()
           client.print(F("\"windSpeedMs\": "));
           client.print(sensor_data.wind_speed_tenth_ms / 10); client.print("."); client.print(sensor_data.wind_speed_tenth_ms % 10);
           client.println(",");
+          client.print(F("\"windSpeedGustsMs\": "));
+          client.print(sensor_data.wind_speed_gusts_tenth_ms / 10); client.print("."); client.print(sensor_data.wind_speed_gusts_tenth_ms % 10);
+          client.println(",");
           client.print(F("\"isRaining\": "));
           client.print(sensor_data.is_raining);
           client.println();
