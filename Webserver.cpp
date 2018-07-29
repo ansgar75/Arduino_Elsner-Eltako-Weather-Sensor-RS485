@@ -24,6 +24,7 @@ void setup_webserver()
   Serial.print(ip[2]); Serial.print(".");
   Serial.print(ip[3]); Serial.println();
   Serial.println();
+
   Ethernet.begin(mac, ip);
 
   server.begin();
@@ -87,6 +88,12 @@ void loop_webserver()
           client.println(",");
           client.print(F("\"isRain\": "));
           client.print(sensor_data.is_raining);
+          client.println(",");
+          client.print(F("\"covProt1IsAct\": "));
+          client.print(cover_protection_data.cover_protection_1_is_active);
+          client.println(",");
+          client.print(F("\"covProt2IsAct\": "));
+          client.print(cover_protection_data.cover_protection_2_is_active);
           client.println();
 
           client.println("}");

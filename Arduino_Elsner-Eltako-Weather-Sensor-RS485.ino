@@ -21,6 +21,8 @@ void setup() {
 
   setup_sensor();
 
+  setup_cover_protection();
+
   setup_webserver();
 }
 
@@ -28,6 +30,8 @@ void setup() {
 void loop() {
 
   loop_sensor();
+
+  loop_cover_protection();
 
   loop_webserver();
   

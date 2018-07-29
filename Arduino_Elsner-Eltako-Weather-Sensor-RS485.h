@@ -28,10 +28,23 @@ typedef struct
 extern SensorData sensor_data;
 
 
+typedef struct
+{
+  bool cover_protection_1_is_active;
+  long cover_protection_1_delay_start_millis;
+  bool cover_protection_2_is_active;
+  long cover_protection_2_delay_start_millis;
+} CoverProtectionData;
+
+extern CoverProtectionData cover_protection_data;
+
+
 void setup_sensor();
+void setup_cover_protection();
 void setup_webserver();
 
 void loop_sensor();
+void loop_cover_protection();
 void loop_webserver();
 
 
