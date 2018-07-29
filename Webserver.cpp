@@ -58,19 +58,19 @@ void loop_webserver()
           client.println();
           client.println("{");
 
-          client.print(F("\"readingAgeMs\": "));
+          client.print(F("\"readAgeMs\": "));
           client.print(millis() - sensor_data.timestamp_millis);
           client.println(",");
-          client.print(F("\"temperatureC\": "));
+          client.print(F("\"tempC\": "));
           client.print(sensor_data.temperature_tenth_c / 10); client.print("."); client.print(sensor_data.temperature_tenth_c % 10);
           client.println(",");
-          client.print(F("\"sunEastKlx\": "));
+          client.print(F("\"eastKlx\": "));
           client.print(sensor_data.sun_east_klx);
           client.println(",");
-          client.print(F("\"sunSouthKlx\": "));
+          client.print(F("\"southKlx\": "));
           client.print(sensor_data.sun_south_klx);
           client.println(",");
-          client.print(F("\"sunWestKlx\": "));
+          client.print(F("\"westKlx\": "));
           client.print(sensor_data.sun_west_klx);
           client.println(",");
           client.print(F("\"daylightLx\": "));
@@ -79,13 +79,13 @@ void loop_webserver()
           client.print(F("\"isDark\": "));
           client.print(sensor_data.is_dark);
           client.println(",");
-          client.print(F("\"windSpeedMs\": "));
+          client.print(F("\"windMs\": "));
           client.print(sensor_data.wind_speed_tenth_ms / 10); client.print("."); client.print(sensor_data.wind_speed_tenth_ms % 10);
           client.println(",");
-          client.print(F("\"windSpeedGustsMs\": "));
+          client.print(F("\"windGustsMs\": "));
           client.print(sensor_data.wind_speed_gusts_tenth_ms / 10); client.print("."); client.print(sensor_data.wind_speed_gusts_tenth_ms % 10);
           client.println(",");
-          client.print(F("\"isRaining\": "));
+          client.print(F("\"isRain\": "));
           client.print(sensor_data.is_raining);
           client.println();
 
