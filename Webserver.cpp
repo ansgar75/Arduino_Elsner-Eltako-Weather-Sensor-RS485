@@ -2,7 +2,7 @@
 
 #include <Ethernet.h>
 
-byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0x00, 0x01 };
 IPAddress ip(192, 168, 0, 11);
 
 EthernetServer server(80);
@@ -11,6 +11,19 @@ EthernetServer server(80);
 void setup_webserver()
 {
 
+  Serial.print(F("Eth MAC address: "));
+  Serial.print(mac[0], HEX); Serial.print(":");
+  Serial.print(mac[1], HEX); Serial.print(":");
+  Serial.print(mac[2], HEX); Serial.print(":");
+  Serial.print(mac[3], HEX); Serial.print(":");
+  Serial.print(mac[4], HEX); Serial.print(":");
+  Serial.print(mac[5], HEX); Serial.println();
+  Serial.print(F("IP address: "));
+  Serial.print(ip[0]); Serial.print(".");
+  Serial.print(ip[1]); Serial.print(".");
+  Serial.print(ip[2]); Serial.print(".");
+  Serial.print(ip[3]); Serial.println();
+  Serial.println();
   Ethernet.begin(mac, ip);
 
   server.begin();

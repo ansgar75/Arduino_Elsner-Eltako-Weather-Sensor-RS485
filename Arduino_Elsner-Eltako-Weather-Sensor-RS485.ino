@@ -17,6 +17,7 @@ void setup() {
   }
 
   Serial.println(F("Elsner-Eltako-Weather-Sensor-RS485 started."));
+  Serial.println();
 
   setup_sensor();
 
