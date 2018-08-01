@@ -6,23 +6,23 @@
 
 typedef struct
 {
-  long timestamp_millis;
-  int temperature_tenth_c;
-  int sun_east_klx;
-  int sun_south_klx;
-  int sun_west_klx;
+  unsigned long timestamp_millis;
+  signed int temperature_tenth_c;
+  unsigned int sun_east_klx;
+  unsigned int sun_south_klx;
+  unsigned int sun_west_klx;
   bool is_dark;
-  int daylight_lx;
-  int wind_speed_tenth_ms;
-  int wind_speed_gusts_tenth_ms;
+  unsigned int daylight_lx;
+  unsigned int wind_speed_tenth_ms;
+  unsigned int wind_speed_gusts_tenth_ms;
   bool is_raining;
 } SensorData;
 
 #define WIND_SPEED_BUFFER_SIZE 60
 typedef struct
 {
-  int value[WIND_SPEED_BUFFER_SIZE];
-  int position;
+  unsigned int value[WIND_SPEED_BUFFER_SIZE];
+  unsigned int position;
 } WindSpeedBuffer;
 
 extern SensorData sensor_data;
