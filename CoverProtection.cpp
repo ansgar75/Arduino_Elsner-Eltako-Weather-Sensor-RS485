@@ -9,10 +9,15 @@ static const uint8_t kCoverProtection1Pin = 6;
 
 // static const unsigned int kCoverProtection2ActivationLimitKmh = 25;
 // static const unsigned int kCoverProtection2DeactivationLimitKmh = kCoverProtection2ActivationLimitKmh - 5;
+// static const unsigned int kCoverProtection2DeactivationMinimumMinutes = 10;
 static const unsigned int kCoverProtection2ActivationLimitKmh = 5;
-static const unsigned int kCoverProtection2DeactivationLimitKmh = kCoverProtection2ActivationLimitKmh - 3;
-static const unsigned int kCoverProtection2DeactivationMinimumMinutes = 10;
+static const unsigned int kCoverProtection2DeactivationLimitKmh = 3;
+static const unsigned int kCoverProtection2DeactivationMinimumMinutes = 3;
 static const uint8_t kCoverProtection2Pin = 7;
+
+static const unsigned long kRelayPullTimeMillis = 500;
+static const unsigned long kRelayFullPeriodMillis = 1000UL * 30;
+
 
 // proper rounding
 #define kmhToTenthMs(kmh)       ((kmh * 100 + 18) / 36)
@@ -23,15 +28,18 @@ CoverProtectionData cover_protection_data_1 = {.kNumberForDisplay = 1,
                                                .kDeactivationLimitTenthMs = kmhToTenthMs(kCoverProtection1DeactivationLimitKmh),
                                                .kDeactivationMinimumIdleTimeMillis = kCoverProtection1DeactivationMinimumDelayMinutes * 60 * 1000UL,
                                                .kPin = kCoverProtection1Pin,
-                                               .is_active = false,
-                                               .idle_time_start_millis = 0};
+                                               .is_active = false, .idle_time_start_millis = 0, .relay_cycle_is_active = false, .relay_is_pulled = false, .relay_pulled_start_millis = 0};
 CoverProtectionData cover_protection_data_2 = {.kNumberForDisplay = 2,
                                                .kActivationLimitTenthMs = kmhToTenthMs(kCoverProtection2ActivationLimitKmh),
                                                .kDeactivationLimitTenthMs = kmhToTenthMs(kCoverProtection2DeactivationLimitKmh),
                                                .kDeactivationMinimumIdleTimeMillis = kCoverProtection2DeactivationMinimumMinutes * 60 * 1000UL,
                                                .kPin = kCoverProtection2Pin,
-                                               .is_active = false,
-                                               .idle_time_start_millis = 0};
+                                               .is_active = false, .idle_time_start_millis = 0, .relay_cycle_is_active = false, .relay_is_pulled = false, .relay_pulled_start_millis = 0};
+
+#define relay_pull(pin)    digitalWrite(pin, LOW);
+#define relay_release(pin) digitalWrite(pin, HIGH);
+
+unsigned long currentMillis;
 
 
 void dump_wind_speed(unsigned int tenthMs)
@@ -42,8 +50,9 @@ void dump_wind_speed(unsigned int tenthMs)
     Serial.print(" m/s*10)");
 }
 
-void dump_cover_protection(CoverProtectionData *cover_protection_data)
+void dump_cover_protection_and_init_relay(CoverProtectionData *cover_protection_data)
 {
+    // dump values
     Serial.print(F("Cover Protection "));
     Serial.print(cover_protection_data->kNumberForDisplay);
     Serial.print(": ");
@@ -55,11 +64,12 @@ void dump_cover_protection(CoverProtectionData *cover_protection_data)
     Serial.print(F(" ms, relay pin "));
     Serial.println(cover_protection_data->kPin);
 
-    digitalWrite(cover_protection_data->kPin, HIGH);
+    // init relay
+    // TBD: why do relays still snap (only) on reset after uploading sketch???
     pinMode(cover_protection_data->kPin, OUTPUT);
-    digitalWrite(cover_protection_data->kPin, LOW);
-    delay(500);
-    digitalWrite(cover_protection_data->kPin, HIGH);
+    relay_pull(cover_protection_data->kPin);
+    delay(kRelayPullTimeMillis);
+    relay_release(cover_protection_data->kPin);
 
     delay(1000);
 }
@@ -67,13 +77,13 @@ void dump_cover_protection(CoverProtectionData *cover_protection_data)
 
 void setup_cover_protection()
 {
-    dump_cover_protection(&cover_protection_data_1);
-    dump_cover_protection(&cover_protection_data_2);
+    dump_cover_protection_and_init_relay(&cover_protection_data_1);
+    dump_cover_protection_and_init_relay(&cover_protection_data_2);
     Serial.println();
 }
 
 
-void check_cover_protection(CoverProtectionData *cover_protection_data)
+void check_environment(CoverProtectionData *cover_protection_data)
 {
     if (cover_protection_data->is_active)
     {
@@ -81,7 +91,7 @@ void check_cover_protection(CoverProtectionData *cover_protection_data)
         if (sensor_data.wind_speed_gusts_tenth_ms < cover_protection_data->kDeactivationLimitTenthMs)
         {
             // less wind, so check for minimum idle time
-            if (millis() - cover_protection_data->idle_time_start_millis > cover_protection_data->kDeactivationMinimumIdleTimeMillis)
+            if (currentMillis - cover_protection_data->idle_time_start_millis > cover_protection_data->kDeactivationMinimumIdleTimeMillis)
             {
                 // enough time with less wind, so we can really deactivate
                 cover_protection_data->is_active = false;
@@ -94,14 +104,14 @@ void check_cover_protection(CoverProtectionData *cover_protection_data)
         else
         {
             // still windy, so update idle time start timestamp to further postpone deactivation
-            cover_protection_data->idle_time_start_millis = millis();
+            cover_protection_data->idle_time_start_millis = currentMillis;
         }
     }
     else if (sensor_data.wind_speed_gusts_tenth_ms >= cover_protection_data->kActivationLimitTenthMs)
     {
         // gusts above upper limit, so activate and set idle time start timestamp
         cover_protection_data->is_active = true;
-        cover_protection_data->idle_time_start_millis = millis();
+        cover_protection_data->idle_time_start_millis = currentMillis;
 
         Serial.print(F("Activated cover protection "));
         Serial.print(cover_protection_data->kNumberForDisplay);
@@ -111,8 +121,45 @@ void check_cover_protection(CoverProtectionData *cover_protection_data)
     }
 }
 
+void control_relay(CoverProtectionData *cover_protection_data)
+{
+    if (cover_protection_data->is_active)
+    {
+        if (!cover_protection_data->relay_cycle_is_active || currentMillis - cover_protection_data->relay_pulled_start_millis > kRelayFullPeriodMillis)
+        {
+            relay_pull(cover_protection_data->kPin);
+            cover_protection_data->relay_cycle_is_active = true;
+            cover_protection_data->relay_is_pulled = true;
+            cover_protection_data->relay_pulled_start_millis = currentMillis;
+
+            Serial.print(F("Pulled relay for cover protection "));
+            Serial.print(cover_protection_data->kNumberForDisplay);
+            Serial.println(".");
+        }
+    }
+    else
+    {
+        cover_protection_data->relay_cycle_is_active = false;
+    }
+
+    if (cover_protection_data->relay_is_pulled && currentMillis - cover_protection_data->relay_pulled_start_millis > kRelayPullTimeMillis)
+    {
+        relay_release(cover_protection_data->kPin);
+        cover_protection_data->relay_is_pulled = false;
+
+        Serial.print(F("Released relay for cover protection "));
+        Serial.print(cover_protection_data->kNumberForDisplay);
+        Serial.println(".");
+    }
+}
+
 void loop_cover_protection()
 {
-    check_cover_protection(&cover_protection_data_1);
-    check_cover_protection(&cover_protection_data_2);
+    currentMillis = millis();
+
+    check_environment(&cover_protection_data_1);
+    control_relay(&cover_protection_data_1);
+
+    check_environment(&cover_protection_data_2);
+    control_relay(&cover_protection_data_2);
 }

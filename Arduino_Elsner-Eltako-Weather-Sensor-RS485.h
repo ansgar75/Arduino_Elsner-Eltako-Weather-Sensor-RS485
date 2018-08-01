@@ -34,9 +34,12 @@ typedef struct
   const unsigned int kActivationLimitTenthMs;
   const unsigned int kDeactivationLimitTenthMs;
   const unsigned long kDeactivationMinimumIdleTimeMillis;
-  uint8_t kPin;
+  const uint8_t kPin;
   bool is_active;
   unsigned long idle_time_start_millis;
+  bool relay_cycle_is_active;
+  bool relay_is_pulled;
+  unsigned long relay_pulled_start_millis;
 } CoverProtectionData;
 
 extern CoverProtectionData cover_protection_data_1;
