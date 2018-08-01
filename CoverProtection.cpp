@@ -1,18 +1,14 @@
 #include "Arduino_Elsner-Eltako-Weather-Sensor-RS485.h"
 
 
-// static const unsigned int kCoverProtection1ActivationLimitKmh = 35;
-static const unsigned int kCoverProtection1ActivationLimitKmh = 15;
+static const unsigned int kCoverProtection1ActivationLimitKmh = 25;
 static const unsigned int kCoverProtection1DeactivationLimitKmh = kCoverProtection1ActivationLimitKmh - 5;
 static const unsigned int kCoverProtection1DeactivationMinimumDelayMinutes = 10;
 static const uint8_t kCoverProtection1Pin = 6;
 
-// static const unsigned int kCoverProtection2ActivationLimitKmh = 25;
-// static const unsigned int kCoverProtection2DeactivationLimitKmh = kCoverProtection2ActivationLimitKmh - 5;
-// static const unsigned int kCoverProtection2DeactivationMinimumMinutes = 10;
-static const unsigned int kCoverProtection2ActivationLimitKmh = 5;
-static const unsigned int kCoverProtection2DeactivationLimitKmh = 3;
-static const unsigned int kCoverProtection2DeactivationMinimumMinutes = 3;
+static const unsigned int kCoverProtection2ActivationLimitKmh = 35;
+static const unsigned int kCoverProtection2DeactivationLimitKmh = kCoverProtection2ActivationLimitKmh - 5;
+static const unsigned int kCoverProtection2DeactivationMinimumMinutes = 10;
 static const uint8_t kCoverProtection2Pin = 7;
 
 static const unsigned long kRelayPullTimeMillis = 500;
