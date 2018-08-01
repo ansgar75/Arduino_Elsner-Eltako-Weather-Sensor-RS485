@@ -90,10 +90,10 @@ void loop_webserver()
           client.print(sensor_data.is_raining);
           client.println(",");
           client.print(F("\"covProt1IsAct\": "));
-          client.print(cover_protection_data.cover_protection_1_is_active);
+          client.print(cover_protection_data_1.is_active);
           client.println(",");
           client.print(F("\"covProt2IsAct\": "));
-          client.print(cover_protection_data.cover_protection_2_is_active);
+          client.print(cover_protection_data_2.is_active);
           client.println();
 
           client.println("}");

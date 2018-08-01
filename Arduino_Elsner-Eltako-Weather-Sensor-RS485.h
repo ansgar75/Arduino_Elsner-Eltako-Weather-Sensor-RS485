@@ -30,13 +30,17 @@ extern SensorData sensor_data;
 
 typedef struct
 {
-  bool cover_protection_1_is_active;
-  long cover_protection_1_delay_start_millis;
-  bool cover_protection_2_is_active;
-  long cover_protection_2_delay_start_millis;
+  const unsigned int kNumberForDisplay;
+  const unsigned int kActivationLimitTenthMs;
+  const unsigned int kDeactivationLimitTenthMs;
+  const unsigned long kDeactivationMinimumIdleTimeMillis;
+  uint8_t kPin;
+  bool is_active;
+  unsigned long idle_time_start_millis;
 } CoverProtectionData;
 
-extern CoverProtectionData cover_protection_data;
+extern CoverProtectionData cover_protection_data_1;
+extern CoverProtectionData cover_protection_data_2;
 
 
 void setup_sensor();
