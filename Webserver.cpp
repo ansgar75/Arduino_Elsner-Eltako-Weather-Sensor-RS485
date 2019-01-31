@@ -62,8 +62,13 @@ void loop_webserver()
           client.print(F("\"readAgeMs\": "));
           client.print(millis() - sensor_data.timestamp_millis);
           client.println(",");
+          client.print(F("\"tempTenthC\": "));
+          client.print(sensor_data.temperature_tenth_c);
+          client.println(",");
           client.print(F("\"tempC\": "));
-          client.print(sensor_data.temperature_tenth_c / 10); client.print("."); client.print(sensor_data.temperature_tenth_c % 10);
+          if (sensor_data.temperature_tenth_c < 0)
+            client.print('-');
+          client.print(abs(sensor_data.temperature_tenth_c) / 10); client.print("."); client.print(abs(sensor_data.temperature_tenth_c) % 10);
           client.println(",");
           client.print(F("\"eastKlx\": "));
           client.print(sensor_data.sun_east_klx);

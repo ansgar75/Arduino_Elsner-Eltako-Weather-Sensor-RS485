@@ -49,7 +49,9 @@ void loop_sensor() {
           Serial.println(sensorMessage);
 
           sensor_data.timestamp_millis = millis();
-          sensor_data.temperature_tenth_c = sensorMessage.substring(1, 4).toInt() * 10 + sensorMessage.substring(5, 6).toInt();
+          // remove decimal point using string manipulation to also read negative values correctly
+          String temperatureThenC = sensorMessage.substring(1, 4) + sensorMessage.substring(5, 6);
+          sensor_data.temperature_tenth_c = temperatureThenC.toInt();
           sensor_data.sun_south_klx = sensorMessage.substring(6, 8).toInt();
           sensor_data.sun_west_klx = sensorMessage.substring(8, 10).toInt();
           sensor_data.sun_east_klx = sensorMessage.substring(10, 12).toInt();
